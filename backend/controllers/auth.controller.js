@@ -57,7 +57,13 @@ export const login = async (req, res) => {
 }
 
 export const logout = async (req, res) => {
-
+    try {
+        res.clearCookie("auth-token");
+        res.status(200).json({ success: true, message: "Logged out successfully" });
+    } catch (error) {
+        console.log("Error in Logout controller: ", error);
+        res.status(500).json({ success: false, error: "Internal Server Error" });
+    }
 }
 
 export const verifyEmail = async (req, res) => {
