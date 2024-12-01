@@ -15,12 +15,12 @@ export const signup = async (req, res) => {
 
     try {
         if (!email || !password || !name) {
-            return res.status(400).json({ success: false, error: "All fields are required" });
+            return res.status(400).json({ success: false, emessage: "All fields are required" });
         }
 
         const userAlreadyExists = await User.findOne({ email });
         if (userAlreadyExists) {
-            return res.status(400).json({ success: false, error: "User already Exists" });
+            return res.status(400).json({ success: false, emessage: "User already Exists" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -50,11 +50,11 @@ export const signup = async (req, res) => {
                 }
             });
         } else {
-            res.status(400).json({ success: false, error: "Couldn't Sign up" });
+            res.status(400).json({ success: false, emessage: "Couldn't Sign up" });
         }
     } catch (error) {
         console.log("Error in Signup controller: ", error);
-        res.status(500).json({ success: false, error: "Internal Server Error" });
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
 
@@ -63,17 +63,17 @@ export const login = async (req, res) => {
 
     try {
         if (!email || !password) {
-            return res.status(400).json({ success: false, error: "All fields are required" });
+            return res.status(400).json({ success: false, message: "All fields are required" });
         }
 
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ success: false, error: "No such user exists. Try Signing up" });
+            return res.status(400).json({ success: false, message: "No such user exists. Try Signing up" });
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            return res.status(400).json({ success: false, error: "Invalid Login Cedentials" });
+            return res.status(400).json({ success: false, message: "Invalid Login Cedentials" });
         }
 
         generateTokenAndSetCookie(res, user._id);
@@ -89,7 +89,7 @@ export const login = async (req, res) => {
         });
     } catch (error) {
         console.log("Error in Login controller: ", error);
-        res.status(500).json({ success: false, error: "Internal Server Error" });
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
 
@@ -99,7 +99,7 @@ export const logout = async (req, res) => {
         res.status(200).json({ success: true, message: "Logged out successfully" });
     } catch (error) {
         console.log("Error in Logout controller: ", error);
-        res.status(500).json({ success: false, error: "Internal Server Error" });
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
 
@@ -113,7 +113,7 @@ export const verifyEmail = async (req, res) => {
         });
 
         if (!user) {
-            return res.status(400).json({ success: false, error: "invalid or expired Verification Code" });
+            return res.status(400).json({ success: false, message: "invalid or expired Verification Code" });
         }
 
         user.isVerified = true;
@@ -133,7 +133,7 @@ export const verifyEmail = async (req, res) => {
         });
     } catch (error) {
         console.log("Error in email verification controller: ", error);
-        res.status(500).json({ success: false, error: "Internal Server Error" });
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
 
@@ -143,7 +143,7 @@ export const forgotPassword = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ success: false, error: "No such user exists. Try Signing up" });
+            return res.status(400).json({ success: false, message: "No such user exists. Try Signing up" });
         }
 
         //generating resetPassword token
@@ -159,7 +159,7 @@ export const forgotPassword = async (req, res) => {
         res.status(200).json({ success: true, message: "Password Reset link send to your email" });
     } catch (error) {
         console.log("Error in forgot password controller: ", error);
-        res.status(500).json({ success: false, error: "Internal Server Error" });
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
 
@@ -173,7 +173,7 @@ export const resetPassword = async (req, res) => {
             resetPasswordExpiresAt: { $gt: Date.now() }
         });
         if (!user) {
-            return res.status(400).json({ success: false, error: "invalid or expired reset password token" });
+            return res.status(400).json({ success: false, message: "invalid or expired reset password token" });
         }
 
         // updating the password
@@ -188,7 +188,7 @@ export const resetPassword = async (req, res) => {
         res.status(200).json({ success: true, message: "Password reset successful" });
     } catch (error) {
         console.log("Error in reset password controller: ", error);
-        res.status(500).json({ success: false, error: "Internal Server Error" });
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
 
@@ -208,6 +208,6 @@ export const checkAuth = async (req, res) => {
         });
     } catch (error) {
         console.log("Error in checkAuth controller: ", error);
-        res.status(500).json({ success: false, error: "Internal Server Error" });
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
