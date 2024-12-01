@@ -27,8 +27,8 @@ const Home = () => {
           transition={{ delay: 0.2 }}
         >
           <h3 className="text-xl font-semibold text-green-400 mb-3">Profile Information</h3>
-          <p className="text-gray-300">Name: {user.name}</p>
-          <p className="text-gray-300">Email: {user.email}</p>
+          <p className="text-gray-300"><b>Name:</b> {user.name}</p>
+          <p className="text-gray-300"><b>Email:</b> {user.email}</p>
         </motion.div>
 
         <motion.div
